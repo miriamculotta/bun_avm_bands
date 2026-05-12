@@ -10,6 +10,14 @@ export const creareServer = () => {
 
    io.bind(engine);
 
+   io.on("connection", (socket) => {
+    console.log(`Cliente conectado (socket.id): ${socket.id}`);
+
+    // socket.emit("saludo", "Hola desde el servidor");
+
+    // socket.on("chat", (msg)=> io.emit("chat", msg));
+})
+
    const { fetch: engineFetch, websocket } = engine.handler();
 
    const server = Bun.serve({
@@ -24,13 +32,19 @@ export const creareServer = () => {
             return engineFetch(req, server);
    }
 
-   return new Response(
+  /* return new Response(
     `<html><body><h1>Hola Mundo</h1></body></html>`,
     {
         headers: { "Content-Type": "text/html; charset: utf-8" }
     }
-   );
+   ); */
+
+   return new Response(Bun.file("./public/index.html"), {
+    headers: { "Content-Type": "text/html; charset: utf-8" }
+    });
+    
     }
-});
+    });
+
      return server;
 }
